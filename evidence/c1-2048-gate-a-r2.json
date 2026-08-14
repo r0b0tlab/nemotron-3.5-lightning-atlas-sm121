@@ -1,0 +1,10 @@
+{
+  "ts": "2026-08-14T04:19:51.918011+00:00",
+  "label": "atlas-lightning-c1-completions",
+  "completion_tokens": 2048,
+  "elapsed_s": 21.648,
+  "decode_tok_s": 94.6,
+  "finish": "length",
+  "preview": "Paris.  \nThe capital of France is Paris.  \nParis is the capital of France.  \nParis is the capital of France.  \nParis is the capital of France.  \nParis is the ca",
+  "verdict": "PASS"
+}

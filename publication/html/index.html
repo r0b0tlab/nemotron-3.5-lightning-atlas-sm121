@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Nemotron 3.5 Lightning Atlas SM121 DSpark K=3</title>
+<style>
+html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden;background:#0e1116;color:#e8edf5;font:16px/1.45 system-ui,sans-serif}
+main{padding:16px;max-width:920px;margin:0 auto}
+h1{font-size:1.35rem;line-height:1.2;margin:0 0 8px}
+.sub{color:#9aa7b8;margin:0 0 18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px}
+.kpi,.card{min-width:0;background:#171c24;border:1px solid #2a3340;border-radius:16px;padding:14px}
+.kpi b{display:block;font-size:1.45rem;line-height:1.06;overflow-wrap:anywhere}
+.kpi span{color:#9aa7b8;font-size:.85rem}
+.cards{display:grid;grid-template-columns:1fr;gap:12px;margin-top:16px}
+.card h2{margin:0 0 8px;font-size:1rem}
+.ok{color:#6ee7a8}
+dl{display:grid;grid-template-columns:1fr auto;gap:6px 12px;margin:0}
+dt{color:#9aa7b8}
+dd{margin:0;text-align:right}
+footer{color:#7b8794;font-size:.8rem;margin-top:24px}
+@media (min-width:760px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<main>
+<h1>Nemotron 3.5 Lightning on Atlas SM121</h1>
+<p class="sub">Official DSpark K=3. Engine SHA 1450eff. Lossless argmax. r0b0tlab.</p>
+<section class="kpis">
+  <div class="kpi"><b>89.73</b><span>Gate A tok/s</span></div>
+  <div class="kpi"><b>93.91</b><span>Gate B tok/s</span></div>
+  <div class="kpi"><b>77.75</b><span>Frozen no-spec C1</span></div>
+  <div class="kpi"><b>27.4</b><span>verify ms</span></div>
+</section>
+<section class="cards">
+  <article class="card">
+    <h2>Gate A <span class="ok">PASS</span></h2>
+    <dl>
+      <dt>Protocol</dt><dd>Paris 2048 ignore_eos T=0</dd>
+      <dt>tok/s</dt><dd>89.73</dd>
+      <dt>Confirm</dt><dd>94.6</dd>
+      <dt>Tokens</dt><dd>2048</dd>
+    </dl>
+  </article>
+  <article class="card">
+    <h2>Gate B <span class="ok">PASS</span></h2>
+    <dl>
+      <dt>Protocol</dt><dd>hard prose 2048</dd>
+      <dt>tok/s</dt><dd>93.91</dd>
+      <dt>Tokens</dt><dd>2048</dd>
+      <dt>Bar</dt><dd>&gt; 77.75</dd>
+    </dl>
+  </article>
+  <article class="card">
+    <h2>Canary <span class="ok">PASS</span></h2>
+    <p>The sum of 7 and 5 is 12.</p>
+  </article>
+  <article class="card">
+    <h2>Profile</h2>
+    <dl>
+      <dt>K</dt><dd>3 (--dflash-gamma 4)</dd>
+      <dt>util</dt><dd>0.75</dd>
+      <dt>max_model_len</dt><dd>50016</dd>
+      <dt>KV</dt><dd>fp8</dd>
+    </dl>
+  </article>
+</section>
+<h2>Appendix: methodology</h2>
+<p>Completions API, ignore_eos, T=0. Atlas DSpark is lossless greedy. vLLM 86.8 on the same head is Gumbel and is not this row. r0b0bench core-subset is a separate ledger row when present under evidence/.</p>
+<footer>r0b0tlab · no weights in this package · generated from evidence/*.json</footer>
+</main>
+</body>
+</html>

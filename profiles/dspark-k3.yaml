@@ -1,0 +1,24 @@
+# DSpark K=3 production profile (Atlas Lightning SM121)
+
+engine_sha: "1450efffc08de10035d4f64e74240d78c9712dee"
+runtime_image: "avarok/atlas-gb10@sha256:57fb3ffbc2b4d915b6a124117d478b54a257fcf47fa1f93a4f5641ebb75ccce7"
+spark_sha256: "a92553f9481bca89c29af3ca1577ef792806ef58ee7baf64e8b8b479aa391e54"
+model_name: "nvidia/nemotron-3.5-lightning-30b-a3b"
+kernel_target: "nemotron-3-nano-30b-a3b"
+port: 8888
+max_seq_len: 50016
+kv_cache_dtype: fp8
+gpu_memory_utilization: 0.75
+scheduling_policy: slai
+tool_call_parser: qwen3_coder
+enable_thinking: true
+dflash: true
+dflash_gamma: 4
+dflash_window_size: 1024
+option_b: true
+disable_watchdogs: true
+no_mtp_drafter_context: true
+notes:
+  - "--dflash-gamma 4 means scheduler K=3"
+  - "Atlas flag --dflash enables the DSpark proposer"
+  - "do not serve this profile at util 0.85"
