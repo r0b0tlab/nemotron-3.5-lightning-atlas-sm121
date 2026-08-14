@@ -30,6 +30,7 @@ Lossless argmax. Live accept counters present. Not Gumbel.
 | Engine SHA | `1450efffc08de10035d4f64e74240d78c9712dee` |
 | Atlas source (private) | `am423/nemotron-lightning-atlas-sm121` @ that SHA |
 | Runtime image | `avarok/atlas-gb10@sha256:57fb3ffbc2b4d915b6a124117d478b54a257fcf47fa1f93a4f5641ebb75ccce7` |
+| GHCR (private) | `ghcr.io/r0b0tlab/nemotron-3.5-lightning-atlas-sm121@sha256:02a85b48ab3efd14e15aed10a9ea0c007a3d0ee2695d8721dd93cdce0432d162` |
 | `spark` binary sha256 | `a92553f9481bca89c29af3ca1577ef792806ef58ee7baf64e8b8b479aa391e54` |
 | Profile | DSpark K=3 (`--dflash-gamma 4`), util 0.75, `max_model_len=50016`, FP8 KV |
 | Target weights | NVIDIA Nemotron 3.5 Lightning 30B-A3B NVFP4 |

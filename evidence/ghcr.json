@@ -1,0 +1,7 @@
+{
+  "image": "ghcr.io/r0b0tlab/nemotron-3.5-lightning-atlas-sm121:1450eff",
+  "digest": "sha256:02a85b48ab3efd14e15aed10a9ea0c007a3d0ee2695d8721dd93cdce0432d162",
+  "visibility": "private",
+  "anon_manifest": 401,
+  "engine_sha": "1450efffc08de10035d4f64e74240d78c9712dee"
+}
