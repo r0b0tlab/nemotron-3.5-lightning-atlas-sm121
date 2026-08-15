@@ -1,0 +1,49 @@
+{
+  "label": "c4-lossless-lanes1",
+  "prompts": 4,
+  "max_tokens": 128,
+  "serial": [
+    {
+      "tok_s": 77.72,
+      "text": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37. The 12th prime number is 37. The 12th prime number is 37. The 12th prime number is 37. The 12th prime number is 37. The 12th prime number is 37. The 12th prime number is 37. The 12th prime number is 37."
+    },
+    {
+      "tok_s": 63.8,
+      "text": "NaCl. It is an ionic compound consisting of a 1:1 ratio of sodium and chloride ions. Sodium chloride is the salt most responsible for the salinity of the ocean and of the extracellular fluid of many multicellular organisms. It is commonly used as a condiment and food preservative. ...read more\n\nWhat is the chemical formula for table salt?\n\nThe chemical formula for table salt is NaCl. It is an ionic compound consisting of a 1:1 ratio of sodium and chloride ions. ...read more\n\nWhat is the chemical formula for table salt?\n\nThe chemical formula for table salt is NaCl. It is an ionic"
+    },
+    {
+      "tok_s": 45.99,
+      "text": "Snow falls on the ground,\nChildren play in the white snow,\nWinter is so much fun.Snow falls on the ground,\nChildren play in the white snow,\nWinter is so much fun."
+    },
+    {
+      "tok_s": 69.96,
+      "text": "if len(arr) <= 1:\n        return arr\n    else:\n        pivot = arr[len(arr) // 2]\n        left = [x for x in arr if x < pivot]\n        middle = [x for x in arr if x == pivot]\n        right = [x for x in arr if x > pivot]\n        return quicksort(left) + middle + quicksort(right)\n\n# Test\nprint(quicksort([3,6,8,10,1,2,1]))\n```\n\nThis Python code implements the quicksort algorithm. It takes a list as input and returns a sorted list."
+    }
+  ],
+  "concurrent": [
+    {
+      "tok_s": 21.54,
+      "text": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37. The sum of the first twelve prime numbers is 2+3+5+7+11+13+17+19+23+29+31+37 = 197. The product of the first twelve prime numbers is 2*3*5*7*11*13*17*19*23*29*3",
+      "elapsed_s": 5.942
+    },
+    {
+      "tok_s": 18.38,
+      "text": "NaCl. It is composed of sodium and chlorine in a 1:1 ratio. NaCl is an ionic compound consisting of a sodium cation (Na+) and a chloride anion (Cl-). It is commonly used as a seasoning and preservative in food.The chemical formula for table salt is NaCl. It is composed of sodium and chlorine in a 1:1 ratio. NaCl is an ionic compound consisting of a sodium cation (Na+) and a chloride anion (Cl-). It is commonly used as a seasoning and preservative in food.",
+      "elapsed_s": 6.312
+    },
+    {
+      "tok_s": 9.14,
+      "text": "Snow falls on the ground,\nSilent white blanket covers all,\nWinter is so cold.Snow falls on the ground,\nSilent white blanket covers all,\nWinter is so cold.",
+      "elapsed_s": 4.049
+    },
+    {
+      "tok_s": 18.81,
+      "text": "if len(arr) <= 1:\n        return arr\n    else:\n        pivot = arr[len(arr) // 2]\n        left = [x for x in arr if x < pivot]\n        middle = [x for x in arr if x == pivot]\n        right = [x for x in arr if x > pivot]\n        return quicksort(left) + middle + quicksort(right)\n\n# Test the function\narr = [3,6,8,10,1,2,1]\nprint(quicksort(arr))\n```\n\nThis Python function implements the quicksort algorithm. It takes a list as input",
+      "elapsed_s": 6.805
+    }
+  ],
+  "wall_s": 6.806,
+  "aggregate_tok_s": 60.09,
+  "lossless": false,
+  "mismatches": 4
+}

@@ -1,0 +1,22 @@
+{
+  "ts": "2026-08-15T16:02:04.971209+00:00",
+  "label": "atlas-lightning-c2-completions",
+  "concurrency": 2,
+  "ok": 2,
+  "errors": [],
+  "completion_tokens": 4096,
+  "wall_s": 45.172,
+  "agg_tok_s": 90.67,
+  "per": [
+    {
+      "completion_tokens": 2048,
+      "elapsed_s": 40.685,
+      "preview": "Paris.  \nThe capital of Germany is Berlin.  \nThe capital of Italy is Rome.  \nThe"
+    },
+    {
+      "completion_tokens": 2048,
+      "elapsed_s": 45.171,
+      "preview": "Paris.  \nThe capital of Germany is Berlin.  \nThe capital of Italy is Rome.  \nThe"
+    }
+  ]
+}

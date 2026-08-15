@@ -1,0 +1,13 @@
+# AR product profile (serial GEMV, sorted prefill default, Marlin prefill opt-in)
+name: ar
+engine_sha: "e9fc025"
+max_seq_len: 50016
+max_batch_size: 8
+max_prefill_tokens: 8192
+default_chat_template_kwargs: '{"enable_thinking":false}'
+env:
+  ATLAS_DISABLE_WATCHDOGS: "1"
+notes:
+  - "serial decode is the default (bit-exact DSpark base); ATLAS_LIGHTNING_DECODE_MULTI=1 opts into batched ladder"
+  - "ATLAS_MOE_MARLIN=1 + ATLAS_MOE_MARLIN_PREFILL=1 opt into Marlin MoE prefill (2.58k tok/s @44k)"
+  - "AR ladder C=1 77 / C=2 104 / C=4 148 / C=8 197 tok/s"

@@ -1,0 +1,15 @@
+# AR 1M long-context profile — bs=1 REQUIRED, --request-timeout 3000 REQUIRED
+name: ar-1m
+engine_sha: "e9fc025"
+max_seq_len: 1000000
+max_batch_size: 1
+max_prefill_tokens: 8192
+request_timeout: 3000
+default_chat_template_kwargs: '{"enable_thinking":false}'
+env:
+  ATLAS_DISABLE_WATCHDOGS: "1"
+notes:
+  - "bs=1 REQUIRED at 1M (SSM pool scales with batch; bs=8 + 1M OOMs at load)"
+  - "default 300s request deadline truncates >300s prefills (750K r1 trap) — --request-timeout 3000"
+  - "DSpark + 1M is an OOM combo (MTP head 4.3GB + drafter ctx 5.4GB + pool 12.2GB) — 1M is AR-only"
+  - "NIAH 300K/500K/749,808 all PASS exact (2026-08-15); pace 1031 @300K → 587 @750K tok/s"

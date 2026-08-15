@@ -1,0 +1,25 @@
+{
+  "prompt": "The capital of France is",
+  "max_tokens": 2048,
+  "ladder": [
+    {
+      "width": 2,
+      "wall_s": 46.218,
+      "aggregate_tok_s": 88.62,
+      "per_request": [
+        {
+          "elapsed_s": 46.21183797999947,
+          "comp": 2048,
+          "tok_s": 44.32,
+          "preview": "Paris.  \nThe capital of Germany is Berlin.  \nThe capital of Italy is Rome.  \nThe"
+        },
+        {
+          "elapsed_s": 41.645224275000146,
+          "comp": 2048,
+          "tok_s": 49.18,
+          "preview": "Paris.  \nThe capital of Germany is Berlin.  \nThe capital of Italy is Rome.  \nThe"
+        }
+      ]
+    }
+  ]
+}

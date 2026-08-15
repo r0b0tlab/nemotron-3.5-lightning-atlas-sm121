@@ -1,0 +1,10 @@
+{
+  "ts": "2026-08-15T14:13:43.823542+00:00",
+  "label": "atlas-lightning-c1-completions",
+  "completion_tokens": 2048,
+  "elapsed_s": 27.628,
+  "decode_tok_s": 74.13,
+  "finish": "length",
+  "preview": "Paris.  \nThe capital of Germany is Berlin.  \nThe capital of Italy is Rome.  \nThe capital of Spain is Madrid.  \nThe capital of Portugal is Lisbon.  \nThe capital ",
+  "verdict": "PASS"
+}

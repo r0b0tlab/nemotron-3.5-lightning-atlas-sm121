@@ -1,0 +1,19 @@
+# DSpark K=3 multi-lane propose — EXPERIMENTAL, accept collapse at C>=2 (Phase C1)
+name: dspark-lanes4
+engine_sha: "e9fc025"
+max_seq_len: 50016
+max_batch_size: 8
+max_prefill_tokens: 8192
+dflash: true
+draft_model: "/model-dspark"
+dflash_gamma: 4
+default_chat_template_kwargs: '{"enable_thinking":false}'
+env:
+  ATLAS_DISABLE_WATCHDOGS: "1"
+  ATLAS_NO_MTP_DRAFTER_CONTEXT: "1"
+  ATLAS_DFLASH_OPTION_B: "1"
+  ATLAS_DFLASH_PROPOSE_LANES: "4"
+notes:
+  - "KNOWN BUG: accept collapses to 0 at n>=2 (A/B: lanes=1 healthy [3,2]; lanes=4 [0,0,0])"
+  - "C1 per-seq path unaffected (France-2048 87.68 tok/s, canary exact)"
+  - "debug: VERIFY_TRACE identical-prompt draft diff (PAUSE-STATE.md)"
