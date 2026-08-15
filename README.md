@@ -36,7 +36,7 @@ preserved for provenance only in `evidence/historical-1450eff-invalid-bars/`.
 
 | Surface | Value |
 |---|---|
-| Engine SHA | `e9fc025` (branch `lightning-sm121`; fork anchor in project `engine/PIN.md`) |
+| Engine SHA | `e9fc025` (branch `lightning-sm121`; fork `github.com/r0b0tlab/atlas`, PRIVATE) |
 | Engine upstream | `Avarok-Cybersecurity/atlas` (AGPL-3.0) |
 | Runtime image | `avarok/atlas-gb10:latest` (digest-pin at final release) |
 | GHCR (private, historical) | `ghcr.io/r0b0tlab/nemotron-3.5-lightning-atlas-sm121@sha256:02a85b48…` (1450eff; see evidence/ghcr.json) |
