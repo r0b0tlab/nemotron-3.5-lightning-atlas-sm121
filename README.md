@@ -1,19 +1,21 @@
 # Nemotron 3.5 Lightning — Atlas SM121 DSpark
 
-Private reproducibility package for serving NVIDIA Nemotron 3.5 Lightning
-NVFP4 with the official DSpark draft head on a single NVIDIA GB10 (SM121)
-using the Atlas (`spark`) engine.
+Public **work-in-progress** reproducibility package for serving NVIDIA
+Nemotron 3.5 Lightning NVFP4 with the official DSpark draft head on a single
+NVIDIA GB10 (SM121) using the Atlas (`spark`) engine. It is published for
+source visibility and collaboration, not as a qualified release.
 
 This repository does **not** ship model weights. Authorized collaborators need
 this repo, the Atlas engine at the pinned SHA (see Pins), and their own
 permitted copy of the NVIDIA checkpoints.
 
-## Status (2026-08-15)
+## Status (2026-08-17) — WIP / NOT QUALIFIED
 
-Fixed-engine gates closed: correctness (G0/G1/G9/G9b), DSpark re-gate (G5),
-1M long-context (300K/500K/749,808 NIAH exact). Open: multi-lane propose
-accept collapse (C>1, lanes=4), verify_e C>1-vs-C1 divergence adjudication,
-final ladder + r0b0bench, then publication at the final SHA. Full claim table:
+Historical fixed-engine gates closed: correctness (G0/G1/G9/G9b), DSpark
+re-gate (G5), and 1M long-context (300K/500K/749,808 NIAH exact). The current
+engine WIP adds strict startup admission, row/lifecycle contracts, and stable
+generation ownership. Open: C>1 batched-verify determinism, multi-lane propose
+accept collapse, final ladder, and r0b0bench. Full claim table:
 [CLAIMS.md](CLAIMS.md); repro: [REPRO.md](REPRO.md).
 
 ## Headline (fixed-engine, engine `e9fc025`, C1, France-2048 ignore_eos T=0)
@@ -36,7 +38,7 @@ preserved for provenance only in `evidence/historical-1450eff-invalid-bars/`.
 
 | Surface | Value |
 |---|---|
-| Engine SHA | `e9fc025` (fork `github.com/r0b0tlab/atlas`, PRIVATE, branch `main`/`lightning-sm121`) |
+| Engine SHA | `a4fb38bbc9f3de38fb61bc9c715f60a8f0c8a39e` (public WIP fork `github.com/r0b0tlab/atlas`, branch `main`) |
 | Engine upstream | `Avarok-Cybersecurity/atlas` (AGPL-3.0) |
 | Runtime image | `avarok/atlas-gb10:latest` (digest-pin at final release) |
 | GHCR (private, historical) | `ghcr.io/r0b0tlab/nemotron-3.5-lightning-atlas-sm121@sha256:02a85b48…` (1450eff; see evidence/ghcr.json) |
@@ -48,7 +50,8 @@ preserved for provenance only in `evidence/historical-1450eff-invalid-bars/`.
 
 ```bash
 # 1. Build spark at the pin (kernel target is nano, not the HF name)
-git clone <engine> atlas && cd atlas && git checkout e9fc025
+git clone https://github.com/r0b0tlab/atlas.git atlas && cd atlas
+git checkout a4fb38bbc9f3de38fb61bc9c715f60a8f0c8a39e
 ATLAS_TARGET_HW=gb10 ATLAS_TARGET_MODEL=nemotron-3-nano-30b-a3b \
   ATLAS_TARGET_QUANT=nvfp4 CUDARC_CUDA_VERSION=13000 \
   cargo build --release -p spark-server
