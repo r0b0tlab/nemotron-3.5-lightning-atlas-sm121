@@ -38,9 +38,13 @@ def run_width(width: int) -> dict:
         elapsed = time.perf_counter() - t_start
         comp = (body.get("usage") or {}).get("completion_tokens") or 0
         text = (body.get("choices") or [{}])[0].get("text") or ""
+        # Text gate: France must complete to Paris on EVERY request. A
+        # token-count-only ladder cannot tell throughput on a correct
+        # engine from throughput on a corrupted one.
+        text_ok = text.lstrip().startswith("Paris")
         results[i] = {"elapsed_s": elapsed, "comp": comp,
                       "tok_s": round(comp / elapsed, 2) if elapsed else 0,
-                      "preview": text[:80]}
+                      "preview": text[:80], "text_ok": text_ok}
 
     threads = [threading.Thread(target=worker, args=(i,)) for i in range(width)]
     for t in threads:
@@ -49,10 +53,12 @@ def run_width(width: int) -> dict:
         t.join()
     wall = time.perf_counter() - t0
     tot = sum(r["comp"] for r in results)
+    all_text_ok = all(r["text_ok"] for r in results)
     return {
         "width": width,
         "wall_s": round(wall, 3),
         "aggregate_tok_s": round(tot / wall, 2) if wall else 0,
+        "text_ok": all_text_ok,
         "per_request": results,
     }
 

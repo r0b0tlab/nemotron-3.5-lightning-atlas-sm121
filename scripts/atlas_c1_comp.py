@@ -25,6 +25,13 @@ elapsed = time.perf_counter() - t0
 u = body.get("usage") or {}
 comp = u.get("completion_tokens") or 0
 text = ((body.get("choices") or [{}])[0].get("text") or "")
+# Text gate: "The capital of France is" MUST complete to Paris. A token-count
+# alone rubber-stamps a corrupted engine (2026-08-17: an all-attention
+# mis-dispatch emitted degenerate tokens at 602 tok/s and this probe still
+# said PASS). The knowledge prefix is checked BEFORE any throughput is
+# reported, so a broken model can never produce a passing record.
+expected_prefix = "Paris"
+text_ok = text.lstrip().startswith(expected_prefix)
 rec = {
     "ts": datetime.now(timezone.utc).isoformat(),
     "label": "atlas-lightning-c1-completions",
@@ -33,7 +40,8 @@ rec = {
     "decode_tok_s": round(comp / elapsed, 2) if elapsed else 0,
     "finish": (body.get("choices") or [{}])[0].get("finish_reason"),
     "preview": text[:160],
-    "verdict": "PASS" if comp >= int(n * 0.9) else "FAIL",
+    "text_ok": text_ok,
+    "verdict": "PASS" if (text_ok and comp >= int(n * 0.9)) else "FAIL",
 }
 out.parent.mkdir(parents=True, exist_ok=True)
 out.write_text(json.dumps(rec, indent=2) + "\n")

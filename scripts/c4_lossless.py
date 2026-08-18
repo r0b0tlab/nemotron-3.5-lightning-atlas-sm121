@@ -15,11 +15,15 @@ URL = "http://127.0.0.1:8888/v1/completions"
 MODEL = "nvidia/nemotron-3.5-lightning-30b-a3b"
 MAX_TOKENS = 128
 
+# (prompt, required text prefix) — the prefix is the CONTENT gate: a
+# corrupted engine (e.g. the 2026-08-17 all-attention mis-dispatch) can
+# emit matching garbage at C=1 and C=N and pass a pure equality check,
+# so every prompt also has a known-good completion prefix.
 PROMPTS = [
-    "Write the first twelve prime numbers in order:",
-    "The chemical formula for table salt is",
-    "A haiku about winter:\n",
-    "def quicksort(arr):\n    # sort a list in place\n",
+    ("Write the first twelve prime numbers in order:", "2, 3, 5, 7"),
+    ("The chemical formula for table salt is", "NaCl"),
+    ("A haiku about winter:\n", ""),
+    ("def quicksort(arr):\n    # sort a list in place\n", ""),
 ]
 
 
@@ -76,8 +80,8 @@ def main():
     label = sys.argv[1] if len(sys.argv) > 1 else "unknown"
     out_path = sys.argv[2] if len(sys.argv) > 2 else f"/tmp/{label}.json"
 
-    serial = run_serial(PROMPTS)
-    conc, wall = run_concurrent(PROMPTS)
+    serial = run_serial([p for p, _ in PROMPTS])
+    conc, wall = run_concurrent([p for p, _ in PROMPTS])
 
     mismatches = 0
     for i, (s, c) in enumerate(zip(serial, conc)):
@@ -85,6 +89,19 @@ def main():
             mismatches += 1
             print(f"MISMATCH prompt {i}: C1[{s['text'][:60]!r}] != "
                   f"C{len(PROMPTS)}[{c['text'][:60]!r}]")
+
+    # Content gate: checked prompts must carry their known-good prefix in
+    # BOTH the C=1 baseline and the C=N run. Equality of two corrupted
+    # completions is not a pass.
+    content_ok = True
+    for i, (_, prefix) in enumerate(PROMPTS):
+        if not prefix:
+            continue
+        for run in (serial[i], conc[i]):
+            if not run["text"].lstrip().startswith(prefix):
+                content_ok = False
+                print(f"CONTENT FAIL prompt {i}: expected prefix {prefix!r}, "
+                      f"got {run['text'][:60]!r}")
 
     tot_tokens = sum(c["comp"] for c in conc)
     rec = {
@@ -96,7 +113,8 @@ def main():
                         "elapsed_s": round(c["elapsed_s"], 3)} for c in conc],
         "wall_s": round(wall, 3),
         "aggregate_tok_s": round(tot_tokens / wall, 2) if wall else 0,
-        "lossless": mismatches == 0,
+        "lossless": mismatches == 0 and content_ok,
+        "content_ok": content_ok,
         "mismatches": mismatches,
     }
     with open(out_path, "w") as f:
