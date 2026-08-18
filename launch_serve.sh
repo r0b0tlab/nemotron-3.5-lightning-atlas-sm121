@@ -21,6 +21,11 @@ docker run -d --name "$NAME" --network host --gpus all --ipc=host \
   -e ATLAS_DISABLE_WATCHDOGS=1 \
   -e ATLAS_NO_MTP_DRAFTER_CONTEXT=1 \
   -e ATLAS_DFLASH_OPTION_B=1 \
+  -e ATLAS_LIGHTNING_MAMBA_EXACT_BATCHED=1 \
+  -e ATLAS_LIGHTNING_MAMBA_BATCH_IN=1 \
+  -e ATLAS_LIGHTNING_MAMBA_BATCH_OUT=1 \
+  -e ATLAS_LIGHTNING_MAMBA_EXACT_PERSISTENT=1 \
+  -e ATLAS_MOE_EXPERT_GROUPED=1 \
   -v "$SPARK:/usr/local/bin/spark:ro" \
   -v "$WEIGHTS:/model:ro" \
   -v "$DRAFT:/draft:ro" \
@@ -31,7 +36,7 @@ docker run -d --name "$NAME" --network host --gpus all --ipc=host \
     --port "$PORT" --max-seq-len 50016 --kv-cache-dtype fp8 \
     --kv-high-precision-layers max --gpu-memory-utilization 0.75 \
     --scheduling-policy slai --tool-call-parser qwen3_coder \
-    --default-chat-template-kwargs '{"enable_thinking":true}' \
+    --default-chat-template-kwargs '{"enable_thinking":false}' \
     --dflash --draft-model /draft --dflash-gamma 4 --dflash-window-size 1024
 
 echo "started $NAME on :$PORT (DSpark K=3)"

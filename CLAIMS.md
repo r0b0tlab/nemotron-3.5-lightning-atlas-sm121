@@ -1,44 +1,65 @@
-# CLAIMS — Nemotron 3.5 Lightning on Atlas (fixed-engine, 2026-08-15)
+# CLAIMS — Nemotron 3.5 Lightning on Atlas (WIP)
 
-Rule: every claim names its evidence artifact (SHA-256 in
-`evidence/fixed-engine-20260815/MANIFEST.sha256`). Speed bars measured BEFORE the
-G0 RoPE fix (`e335b00`) are INVALID (bisect-proven 2026-08-15: the corrupted-attention
-model inflated acceptance; see `evidence/historical-1450eff-invalid-bars/NOTICE.md`).
+This repository is a **work-in-progress collaboration package**, not a qualified
+release. Current selected-lane metrics are bound to Atlas source
+`cd2218ec426a907f681c602feb966611d6db7443` and the checksummed sanitized bundle
+under `evidence/nemotron-lightning-cd2218e-20260818/`.
 
-## Engine correctness (G0/G1/G9/G9b, engine e9fc025)
+The r0b0bench run used
+`--only latency,concurrency,throughput,gsm8k`; it is intentionally
+`invalid_for_publish=true` and is not a full public core-subset claim.
 
-| # | Claim | Evidence |
-|---|---|---|
-| 1 | No RoPE in Nemotron attention (HF reference has none); distance-decay fixed | bisect + dist sweep 0–512 exact (campaign STATUS.md, G0 section) |
-| 2 | Sorted-MoE prefill 64-tile grid fix (silent-partial-compute closed) | GSM8K r0b0-exact 12/12 after fix (campaign STATUS.md, G9) |
-| 3 | Marlin MoE prefill opt-in, 2.58k tok/s @44k | gated: canary, GSM8K 12/12, NIAH 2k/12k/44k (campaign STATUS.md, G9b) |
-| 4 | Decode-graph 716 class closed (capture guard, replay allowed) | `fcaa1e1` + `e9fc025` |
+## Current selected-lane measurements
 
-## DSpark K=3 quality (G5, engine e9fc025, DSpark ON)
+| # | Measurement | Result | Evidence |
+|---:|---|---:|---|
+| 1 | Application start → API ready | 33.853 s | `REPORT.md`, `METRICS.json` |
+| 2 | Streaming TTFT, client/server | 375.0 / 315.5 ms | `REPORT.md`, `R0B0BENCH-REPORT.json` |
+| 3 | Mean ITL | 19.49 ms | same |
+| 4 | C1 aggregate throughput | 84.18 tok/s | same |
+| 5 | C2 aggregate throughput | 152.84 tok/s | same |
+| 6 | C4 aggregate throughput | **168.42 tok/s** | same |
+| 7 | C6 aggregate throughput | 155.84 tok/s | same |
+| 8 | C1 2,048-token decode median | 67.78 tok/s | same |
+| 9 | Actual 24,541-token prefill wall proxy | 1,697.10 prompt tok/s | same |
+| 10 | GSM8K 0-shot flexible extract | **191/200 (95.5%)** | `GSM8K-200-SCORES.json` |
+| 11 | Benchmark infrastructure errors | 0 | `R0B0BENCH-REPORT.json` |
+| 12 | Health/CUDA/proposal/reset/panic markers | 0 | `METRICS.json`, `SERVER-SANITIZED.log` |
 
-| # | Claim | Evidence |
-|---|---|---|
-| 5 | Canary exact (thinking-off) | campaign STATUS.md G5 |
-| 6 | C1 France-2048 DSpark 89.31 vs no-spec 74.13 = 1.20x | `c1-2048-dspark-fixed-gate-a.json`, `c1-2048-nospec-fixed-gate-a.json` |
-| 7 | C1 essay-2048 72.41 vs no-spec 71.82 = 1.01x (known C1 wall) | campaign STATUS.md G5 |
-| 8 | GSM8K r0b0-exact 12/12 with DSpark ON | campaign STATUS.md G5 |
-| 9 | NIAH 12,440 + 44,784 exact with DSpark ON (sorted prefill live) | `niah-12440-dspark-fixed.json`, `niah-44784-dspark-fixed.json` |
+Concurrency used three repetitions per level, discarded the first, and produced
+512 output tokens per request. C4 was the highest-throughput tested width; C6
+was 7.47% below C4. The prefill harness nominally targeted 14K but produced an
+exact server-reported 24,541-token prompt, so the published result is labeled
+24.5K rather than 14K.
 
-## Long context (AR, 1M profile, bs=1)
+## Continuous telemetry
 
-| # | Claim | Evidence |
-|---|---|---|
-| 10 | NIAH 300,000 exact (past the 262,144 config RoPE cap) | `niah-300k-ar-1m.json` (1031.6 tok/s prefill) |
-| 11 | NIAH 500,000 exact | `niah-500k-ar-1m.json` (735.3 tok/s prefill) |
-| 12 | NIAH 749,808 (75% window) exact, vLLM-parity | `niah-750k-ar-1m-r2.json` (586.8 tok/s prefill; r1 = 300s-deadline trap, preserved) |
+- 529 samples over 1,058.57 seconds.
+- Actual median interval 2.006 seconds; `docker stats --no-stream` made the
+  requested one-second collector blocking.
+- GPU utilization median 95%, maximum 96%.
+- GPU temperature median 79°C, maximum 84°C.
+- Spark unified-memory process median 100,472 MiB, maximum 106,626 MiB.
+- Host MemAvailable minimum 5.536 GiB.
+- Zero health failures and zero container-not-running samples during traffic.
 
-## C>1 concurrency (DSpark, work in progress — NOT claims yet)
+See `TELEMETRY-SUMMARY.json` for all min/median/mean/p95/max values.
 
-| # | Measurement | Evidence |
-|---|---|---|
-| 13 | Fixed-engine baseline: C1 85.59 / C2 90.67 / C4 81.95 France-2048 | `phase3-c{1,2,4}-dspark-baseline.json` |
-| 14 | Multi-lane propose: accept collapses at n≥2 (lanes=4), lanes=1 healthy | `phase3-c{2,4}-multilane.json`, `ladder-c2-lanes1.json`, `ladder-c2-first.json`, `c4-lossless-lanes{1,4}.json`, PAUSE-STATE.md |
-| 15 | DSpark C>1 batched verify diverges from C=1 text (4/4 prompts, near-tie class) — PRE-EXISTING, adjudication open | `c4-lossless-lanes1.json` (serial path, healthy accept [3,2]) |
+## Current evidence caveats
 
-No C>1 speed claim is made until the multi-lane bug is fixed and the ladder is
-quality-re-gated (canary + GSM8K + NIAH 44k + accept hist).
+1. Filtered selected-lane run; not public-suite eligible.
+2. No model weights, raw prompts, raw responses, host paths, credentials, PIDs,
+   container IDs, addresses, or device pointers are published.
+3. `GSM8K-200-SCORES.json` keeps all 200 score/timing/usage records but replaces
+   question/response content with SHA-256 hashes.
+4. The pinned r0b0bench source assigns `report.json.started_utc` after lane
+   execution; treat it as report-finalization time. Telemetry timestamps define
+   the actual epoch.
+5. Runtime source stays WIP even though all selected lanes passed.
+
+## Historical evidence retained separately
+
+Historical fixed-engine G0/G1/G5/G9/G9b and long-context 300K/500K/749,808-token
+records remain under `evidence/fixed-engine-20260815/`. Pre-G0 `1450eff` speed
+bars remain invalid and quarantined under
+`evidence/historical-1450eff-invalid-bars/`; they are not current baselines.

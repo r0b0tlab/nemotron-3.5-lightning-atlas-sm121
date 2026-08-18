@@ -1,58 +1,119 @@
-# REPRO — build, serve, and gate Atlas Nemotron Lightning
+# REPRO — Atlas Nemotron 3.5 Lightning DSpark WIP
 
-Target: NVIDIA GB10 / SM121, single node. Engine: Atlas (`spark`), AGPL-3.0.
-No weights in this repo.
+Target: one NVIDIA GB10 / SM121. Engine: Atlas (`spark`, AGPL-3.0).
+No weights are distributed in this repository.
 
-## 1. Engine
+## 1. Build the exact runtime source
 
 ```bash
-git clone https://github.com/Avarok-Cybersecurity/atlas.git atlas && cd atlas
-git fetch origin  # lightning-sm121 fork anchor (see engine/PIN.md of the project root)
-git checkout e9fc025   # pinned committed HEAD at time of this package
-ATLAS_TARGET_HW=gb10 ATLAS_TARGET_MODEL=nemotron-3-nano-30b-a3b \
-  ATLAS_TARGET_QUANT=nvfp4 CUDARC_CUDA_VERSION=13000 \
+git clone https://github.com/r0b0tlab/atlas.git atlas
+cd atlas
+git checkout cd2218ec426a907f681c602feb966611d6db7443
+
+ATLAS_TARGET_HW=gb10 \
+ATLAS_TARGET_MODEL=nemotron-3.5-lightning-30b-a3b \
+ATLAS_TARGET_QUANT=nvfp4 \
+CUDARC_CUDA_VERSION=13000 \
   cargo build --release -p spark-server
-# binary: target/release/spark  (NOT spark-server)
+
+sha256sum target/release/spark
+# benchmarked binary:
+# 98affc23b5f41829049a19cf702e402edcda1d7a570443203394090095405fd4
 ```
 
-Kernel target note: Lightning (hidden 2688) binds the `nemotron-3-nano-30b-a3b`
-kernel set. Check the resolved target in the serve log.
+The build selector must be `nemotron-3.5-lightning-30b-a3b`. Do not substitute
+the Nano selector. The dedicated Lightning target may reuse compatible
+hidden-2688 kernels through its registry inheritance, but product identity
+remains Lightning.
 
-## 2. Serve (DSpark K=3, the gated profile)
+## 2. Serve the WIP DSpark profile
 
 ```bash
-bash launch_serve.sh          # see profiles/dspark-k3.yaml for the env + args
-# readiness: curl http://127.0.0.1:8888/v1/models (model load ~90-150 s)
-python3 scripts/canary.py     # expect exact "The sum of 7 and 5 is 12."
+export WEIGHTS=/path/to/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4
+export DRAFT=/path/to/official-Lightning-DSpark-head
+export SPARK=/path/to/atlas/target/release/spark
+bash launch_serve.sh
+curl -fsS http://127.0.0.1:8888/health
+curl -fsS http://127.0.0.1:8888/v1/models
 ```
 
-Product env: `ATLAS_DISABLE_WATCHDOGS=1 ATLAS_NO_MTP_DRAFTER_CONTEXT=1
-ATLAS_DFLASH_OPTION_B=1 ATLAS_DFLASH_PROPOSE_LANES=1` (lanes=1 until the
-multi-lane accept bug is fixed — see PAUSE-STATE).
+The benchmarked profile uses:
 
-Long-context profile: `--max-seq-len 1000000 --max-batch-size 1
---max-prefill-tokens 8192 --request-timeout 3000` (bs=1 REQUIRED; the default
-300 s deadline truncates >300 s prefills).
+- max context 50,016;
+- max batch 8;
+- max prefill tokens 8,192;
+- ModelOpt NVFP4 target;
+- FP8 KV with high-precision target attention boundaries;
+- DSpark gamma 4 / direct verify K=3;
+- SWA window 1,024;
+- one proposal lane;
+- thinking disabled;
+- exact Lightning Mamba projections/persistent recurrence;
+- grouped routed-expert path;
+- GPU-memory utilization 0.75.
 
-## 3. Gate protocols (the ones behind the claims)
+The runtime image manifest used by `launch_serve.sh` is
+`avarok/atlas-gb10@sha256:57fb3ffbc2b4d915b6a124117d478b54a257fcf47fa1f93a4f5641ebb75ccce7`.
+The observed local image config in the benchmark epoch was
+`sha256:542653d59a7a1140c651af1e939866dcd64b5bfe9af964fc1b6f91ce9d1c9b58`;
+a config ID is not a portable registry digest.
 
-- Canary: scripts/canary.py, thinking-off chat, exact string.
-- C1 France probe: `scripts/atlas_c1_comp.py` (prompt "The capital of France is",
-  2048, ignore_eos, T=0) — NOT the Paris essay.
-- Ladder: `scripts/ladder.py` (identical France prompts at C=2/4/8; aggregate =
-  Σ completion tokens / wall).
-- Lossless probe: `scripts/c4_lossless.py` (4 distinct prompts; C=1 alone then
-  C=N concurrent; greedy outputs compared).
-- GSM8K r0b0-exact: 12-case fixed subset, exact-match, official scorer untouched.
-- NIAH r0b0-exact: fixed needle + filler, depths 12,440 / 24,880 / 44,784 at 50k
-  profile; 300K / 500K / 749,808 on the 1M profile. Retrieval must be exact.
+## 3. Requested selected-lane benchmark
 
-## 4. Known limitations (disclosed, not silent)
+Pinned harness: r0b0bench `1.0.0rc2`.
 
-- C>1 batched verify (DSpark) diverges from C=1 text on 4/4 distinct prompts
-  (near-tie class, adjudication in progress). C>1 quality claims require the
-  adjudicated bar.
-- Multi-lane propose (ATLAS_DFLASH_PROPOSE_LANES=4) collapses acceptance at
-  n≥2 — NOT a serving profile until fixed.
-- 1M + DSpark is an OOM combination; 1M is AR-only.
-- Prefill pace degrades with depth (1031 → 587 tok/s from 300K to 750K).
+```bash
+export R0B0BENCH_GSM8K_DATA=/path/to/gsm8k/test.jsonl
+export R0B0BENCH_CHAT_TEMPLATE_KWARGS='{"thinking":false,"enable_thinking":false}'
+
+r0b0bench run \
+  --profile core-subset \
+  --only latency,concurrency,throughput,gsm8k \
+  --base-url http://127.0.0.1:8888/v1 \
+  --model nvidia/nemotron-3.5-lightning-30b-a3b \
+  --tokenizer "$WEIGHTS" \
+  --output /path/outside/repo \
+  --timeout 3600
+```
+
+Protocol defaults from the pinned harness:
+
+- latency: 5 streaming reps, first dropped, 128-token ceiling;
+- concurrency: C1/C2/C4/C6, 3 reps each, first dropped, 512 output tokens;
+- throughput: 5×2,048-token C1 decode plus 3 prefill proxies;
+- GSM8K: deterministic 200-row subset, concurrency 2, 512-token ceiling,
+  0-shot flexible extraction.
+
+Because `--only` filters the profile, the report must say
+`invalid_for_publish=true`. This is expected and must not be removed or
+relabelled.
+
+## 4. Verify published evidence
+
+```bash
+cd evidence/nemotron-lightning-cd2218e-20260818
+sha256sum -c MANIFEST.sha256
+```
+
+Published files:
+
+- `REPORT.md` — human-readable full metrics and caveats;
+- `METRICS.json` — complete reduced benchmark/server/resource metrics;
+- `R0B0BENCH-REPORT.json` — complete selected-lane r0b0bench report;
+- `GSM8K-200-SCORES.json` — all 200 score/timing/usage rows with content hashes;
+- `TELEMETRY-SUMMARY.json` — full resource statistics;
+- `SERVER-SANITIZED.log` — full ANSI-stripped/redacted server log;
+- `BENCHMARK-EVENTS.log` — selected-lane execution events;
+- `WIP-NOTICE.md` — scope and sanitization boundary.
+
+Prompts, responses, raw host telemetry, credentials, host paths, LAN addresses,
+PIDs, container IDs, and device pointers are intentionally excluded.
+
+## 5. Known limitations
+
+- WIP source; not a qualified Atlas release.
+- Selected-lane run, not a full public core-subset profile.
+- The 24.5K prefill result is an end-to-end wall proxy with 16 output tokens,
+  not a kernel-only prefill benchmark.
+- C4 was best among tested widths; C6 regressed from C4.
+- Historical 1M-context evidence is AR-only; 1M + DSpark is not this profile.

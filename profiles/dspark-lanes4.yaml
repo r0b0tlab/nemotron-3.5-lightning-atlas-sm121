@@ -1,5 +1,6 @@
-# DSpark K=3 multi-lane propose — EXPERIMENTAL, accept collapse at C>=2 (Phase C1)
-name: dspark-lanes4
+# HISTORICAL REJECTED profile; retained for provenance, never launch.
+name: dspark-lanes4-historical-rejected
+status: superseded
 engine_sha: "e9fc025"
 max_seq_len: 50016
 max_batch_size: 8
@@ -17,3 +18,4 @@ notes:
   - "KNOWN BUG: accept collapses to 0 at n>=2 (A/B: lanes=1 healthy [3,2]; lanes=4 [0,0,0])"
   - "C1 per-seq path unaffected (France-2048 87.68 tok/s, canary exact)"
   - "debug: VERIFY_TRACE identical-prompt draft diff (PAUSE-STATE.md)"
+  - "superseded by reviewed native Bxgamma at cd2218ec426a907f681c602feb966611d6db7443"

@@ -1,6 +1,6 @@
-# DSpark K=3 production profile (C1-verified); do NOT serve at util 0.85
+# DSpark K=3 WIP benchmark profile; do NOT serve at util 0.85
 name: dspark-k3
-engine_sha: "e9fc025"
+engine_sha: "cd2218ec426a907f681c602feb966611d6db7443"
 max_seq_len: 50016
 max_batch_size: 8
 max_prefill_tokens: 8192
@@ -13,7 +13,13 @@ env:
   ATLAS_NO_MTP_DRAFTER_CONTEXT: "1"
   ATLAS_DFLASH_OPTION_B: "1"
   ATLAS_DFLASH_PROPOSE_LANES: "1"
+  ATLAS_LIGHTNING_MAMBA_EXACT_BATCHED: "1"
+  ATLAS_LIGHTNING_MAMBA_BATCH_IN: "1"
+  ATLAS_LIGHTNING_MAMBA_BATCH_OUT: "1"
+  ATLAS_LIGHTNING_MAMBA_EXACT_PERSISTENT: "1"
+  ATLAS_MOE_EXPERT_GROUPED: "1"
 notes:
   - "--dflash-gamma 4 means scheduler K=3"
-  - "lanes=1 until the multi-lane accept-collapse bug is fixed (Phase C1) — lanes=4 is NOT healthy"
-  - "fixed-engine reference: France-2048 89.31 (1.20x) / essay-2048 72.41 (1.01x); GSM8K 12/12; NIAH 12,440/44,784 exact"
+  - "native Bxgamma is authoritative; generic DFlash fallback remains separate"
+  - "selected-lane metrics: C1/C2/C4/C6 84.18/152.84/168.42/155.84 aggregate tok/s; GSM8K 191/200"
+  - "WIP / selected-lane evidence only; invalid_for_publish=true"
