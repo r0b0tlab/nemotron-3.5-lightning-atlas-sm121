@@ -12,7 +12,10 @@
 - max batch 8;
 - prefill cap 8,192;
 - util 0.75;
-- watchdogs enabled.
+- watchdogs enabled;
+- native AR multi-sequence decode enabled by default;
+- `ATLAS_LIGHTNING_DECODE_MULTI=0` is diagnostic only and is not the production
+  AR profile.
 
 ## Required admission
 

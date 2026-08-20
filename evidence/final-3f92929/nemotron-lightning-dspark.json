@@ -1,0 +1,114 @@
+{
+  "file_count": 21,
+  "files": [
+    {
+      "bytes": 1,
+      "path": ".cache/huggingface/.gitignore",
+      "sha256": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1"
+    },
+    {
+      "bytes": 191,
+      "path": ".cache/huggingface/CACHEDIR.TAG",
+      "sha256": "f6572428f6d5e1575e73a1502895a8731f10757dfbb634909c6e154b849af91d"
+    },
+    {
+      "bytes": 0,
+      "path": ".cache/huggingface/download/.gitattributes.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 101,
+      "path": ".cache/huggingface/download/.gitattributes.metadata",
+      "sha256": "1a00edc49f293f42ca21e3d7d7e1bc0e16e05a8e67f1b17ef1683ca3435a90e6"
+    },
+    {
+      "bytes": 0,
+      "path": ".cache/huggingface/download/LICENSE.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 101,
+      "path": ".cache/huggingface/download/LICENSE.metadata",
+      "sha256": "4b568a870d279f1b910df4cc0c74a1611d9960150b8bd3332bb9758cebc52385"
+    },
+    {
+      "bytes": 0,
+      "path": ".cache/huggingface/download/README.md.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 101,
+      "path": ".cache/huggingface/download/README.md.metadata",
+      "sha256": "f201fce130d3a46227a6637f9eb98c188f92f97e1223b5b4e86c3dea6d536e06"
+    },
+    {
+      "bytes": 0,
+      "path": ".cache/huggingface/download/config.json.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 101,
+      "path": ".cache/huggingface/download/config.json.metadata",
+      "sha256": "a95c2ca857f986fce5a5945e6a5d5fd1073574f6612ca9b63dbd47166b369c56"
+    },
+    {
+      "bytes": 0,
+      "path": ".cache/huggingface/download/hf_quant_config.json.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 101,
+      "path": ".cache/huggingface/download/hf_quant_config.json.metadata",
+      "sha256": "d8a1a5d867cdd717f3f06cd802a243573dc3db73d0d22958df33a5da2d63d00c"
+    },
+    {
+      "bytes": 0,
+      "path": ".cache/huggingface/download/model.safetensors.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 125,
+      "path": ".cache/huggingface/download/model.safetensors.metadata",
+      "sha256": "fcf23d20221c6b50f80335eb6e8cc0baf7200de68c151f2667ba9ffb0faf0e4c"
+    },
+    {
+      "bytes": 840,
+      "path": ".cache/huggingface/trees/e3af76fbff445ef795958bee96bc1126af70fd57.json",
+      "sha256": "6ebaaddd1c563f247deadd9183966497b9757d7b588774b7e3db180eee283651"
+    },
+    {
+      "bytes": 1519,
+      "path": ".gitattributes",
+      "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
+    },
+    {
+      "bytes": 2618,
+      "path": "LICENSE",
+      "sha256": "8a0c5e232551abcb102d1bd39a34866ef4520361b613bd6405d55b36562e4d88"
+    },
+    {
+      "bytes": 13786,
+      "path": "README.md",
+      "sha256": "5d74007da17d68602c25b9ceed3d6cb434550233eba7722ec6fa11461aeeda2d"
+    },
+    {
+      "bytes": 1995,
+      "path": "config.json",
+      "sha256": "e390ae49aaf2137b4bf3009c229cba852c44032163bb151b20bbc2376d3a6125"
+    },
+    {
+      "bytes": 280,
+      "path": "hf_quant_config.json",
+      "sha256": "5b4eea93e73f8b14ac5a8ec98369c8100fb9911e25fe030afe87a82d44e68887"
+    },
+    {
+      "bytes": 1349057504,
+      "path": "model.safetensors",
+      "sha256": "27e3225376a7d65e2b602a3909c8526217bdc7ad29a2310f5f8b66f7d5343d13"
+    }
+  ],
+  "label": "nemotron-lightning-dspark",
+  "manifest_sha256": "edfd1601716ea449ce05ed6f4edb38fa4970f07bfc5b09b52e039b674cb0fa8d",
+  "schema": "r0b0tlab.lightning.checkpoint-manifest.v1",
+  "total_bytes": 1349079364
+}

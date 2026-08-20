@@ -8,7 +8,7 @@ This package is weights-free. Reproduction requires permitted local copies of:
 ## 1. Build the exact Atlas source
 
 ```bash
-export ATLAS_SHA=<FINAL_ATLAS_SHA>
+export ATLAS_SHA=3f9292938e7ee159bfbe3a1afd16e1de3e340b84
 export ATLAS_REPO=https://github.com/r0b0tlab/atlas.git
 export OUT=/tmp/atlas-build-$ATLAS_SHA
 bash scripts/build_engine.sh
@@ -23,8 +23,8 @@ Lightning target, and prints the binary hash. Do not substitute the Nano target.
 export SPARK=$OUT/target/release/spark
 export BASE_IMAGE=avarok/atlas-gb10@sha256:57fb3ffbc2b4d915b6a124117d478b54a257fcf47fa1f93a4f5641ebb75ccce7
 export SOURCE_SHA=$ATLAS_SHA
-export SOURCE_TREE=<FINAL_ATLAS_TREE>
-export BINARY_SHA=<FINAL_BINARY_SHA256>
+export SOURCE_TREE=8b6feef75854c8a88e9b9cb35a1edafe837723ac
+export BINARY_SHA=1111f86b201a906b427b8305f337bb654c40099df5e3e40b1dac074e05b78195
 export TAG=atlas-lightning-repro:${ATLAS_SHA:0:12}
 bash recipe/build_image.sh
 ```
@@ -90,7 +90,7 @@ zero infrastructure failures, and exact source/image/model/profile identity.
 ## 6. Verify evidence
 
 ```bash
-sha256sum -c evidence/<FINAL_EVIDENCE_DIR>/MANIFEST.sha256
+sha256sum -c evidence/final-3f92929/MANIFEST.sha256
 python3 scripts/public_safety_scan.py .
 ```
 

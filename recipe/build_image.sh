@@ -9,6 +9,7 @@ umask 077
 : "${BINARY_SHA:?set the exact binary SHA-256}"
 TAG="${TAG:-atlas-lightning-repro:${SOURCE_SHA:0:12}}"
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
+TEMPLATE_SHA=$(sha256sum "$ROOT/jinja/nemotron_lightning.jinja" | cut -d' ' -f1)
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 cp "$ROOT/docker/Dockerfile" "$TMP/Dockerfile"
@@ -19,5 +20,7 @@ docker build --pull=false \
   --build-arg SOURCE_SHA="$SOURCE_SHA" \
   --build-arg SOURCE_TREE="$SOURCE_TREE" \
   --build-arg BINARY_SHA="$BINARY_SHA" \
+  --build-arg TEMPLATE_SHA="$TEMPLATE_SHA" \
   -t "$TAG" "$TMP"
-docker image inspect "$TAG" --format '{{.Id}} {{index .RepoDigests 0}}'
+IMAGE_INFO=$(docker image inspect "$TAG" --format '{{.Id}} {{json .RepoDigests}}')
+printf 'tag=%s\ntemplate_sha=%s\nimage_info=%s\n' "$TAG" "$TEMPLATE_SHA" "$IMAGE_INFO"

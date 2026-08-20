@@ -30,7 +30,7 @@ Users must obtain and use their own permitted checkpoint copies.
 
 ## Runtime identity
 
-- Atlas source: `<FINAL_ATLAS_SHA>`
+- Atlas source: `3f9292938e7ee159bfbe3a1afd16e1de3e340b84`
 - Build target: `gb10 / nemotron-3.5-lightning-30b-a3b / nvfp4`
 - DSpark: Qwen3DSparkModel, gamma 4, direct K=3, Markov rank 512
 - Target KV: FP8 with high-precision attention boundaries

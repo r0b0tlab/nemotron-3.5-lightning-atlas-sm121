@@ -1,22 +1,25 @@
 # Claims and evidence boundary
 
-Status: FINAL CLAIMS PENDING FINAL REQUALIFICATION
+Status: NOT_QUALIFIED / FULL_SUITE_INCOMPLETE
 
-This file must be updated in the same finalization commit as the exact source,
-image, benchmark, and evidence manifests. Placeholders are not publishable.
+The native source/build/runtime and immutable-image gates are closed. The full
+claim-bearing r0b0bench `core-subset` report is not claimable because the
+official BFCL multi-turn lane stalled after 129/200 rows; its partial raw result
+is diagnostic only. No public quality, BFCL, or aggregate throughput claim is
+made by this package.
 
 ## Claim identity
 
-- Source SHA: `<FINAL_ATLAS_SHA>`
-- Source tree: `<FINAL_ATLAS_TREE>`
-- Binary SHA-256: `<FINAL_BINARY_SHA256>`
-- Image manifest: `<FINAL_IMAGE_MANIFEST>`
-- Model manifest: `<FINAL_MODEL_MANIFEST>`
-- DSpark manifest: `<FINAL_DSPARK_MANIFEST>`
-- Profile hash: `<FINAL_PROFILE_HASH>`
-- Harness revision: `<FINAL_HARNESS_SHA>`
-- Evidence directory: `<FINAL_EVIDENCE_DIR>`
-- Evidence manifest: `<FINAL_EVIDENCE_MANIFEST_SHA>`
+- Source SHA: `3f9292938e7ee159bfbe3a1afd16e1de3e340b84`
+- Source tree: `8b6feef75854c8a88e9b9cb35a1edafe837723ac`
+- Binary SHA-256: `1111f86b201a906b427b8305f337bb654c40099df5e3e40b1dac074e05b78195`
+- Image manifest: `ghcr.io/r0b0tlab/nemotron-3.5-lightning-atlas-sm121@sha256:d00a317bbe8ada857836c89bde54b75449d2b91086594db7cce1be27683483e4`
+- Model manifest: `a14fad4058be6eb1bd2735148a9b94c4c2e069d1fcbf886a60de92deb3cd0a9b`
+- DSpark manifest: `edfd1601716ea449ce05ed6f4edb38fa4970f07bfc5b09b52e039b674cb0fa8d`
+- Profile hash: `1f96d12a86b2acdde41a5b0b6a713216d8d5d5fbd216c9521c0b5e1ce78a580f`
+- Harness revision: `b7714a01d9ad7fa2f892fda4e0bbb8c2a8b8b801`
+- Evidence directory: `5bd1fff-r0b0bench-corrected4` (partial diagnostic; BFCL incomplete)
+- Evidence manifest: `NOT_AVAILABLE_FULL_SUITE_INCOMPLETE`
 
 ## Required final gates
 
