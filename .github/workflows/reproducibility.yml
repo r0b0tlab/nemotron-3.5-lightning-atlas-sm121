@@ -1,0 +1,28 @@
+name: reproducibility
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: shell syntax
+        run: bash -n launch_serve.sh scripts/*.sh recipe/*.sh
+      - name: python syntax
+        run: python -m compileall -q scripts
+      - name: public safety
+        run: python scripts/public_safety_scan.py .
+      - name: checksum manifests
+        run: |
+          while IFS= read -r manifest; do sha256sum -c "$manifest"; done < <(find evidence -name MANIFEST.sha256 -type f -print)
+      - name: required identity strings
+        run: |
+          grep -Fq 'nemotron-3.5-lightning-30b-a3b' README.md
+          grep -Fq 'gamma 4' README.md
+          grep -Fq 'WIP' README.md || grep -Fq 'qualified' README.md

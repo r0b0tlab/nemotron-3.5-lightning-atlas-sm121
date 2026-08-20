@@ -1,24 +1,21 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT
 set -euo pipefail
-
-: "${WEIGHTS:?set WEIGHTS to the Lightning NVFP4 checkpoint dir}"
-: "${DRAFT:?set DRAFT to the official DSpark head dir}"
-SPARK="${SPARK:-$PWD/spark}"
-IMAGE="${IMAGE:-avarok/atlas-gb10@sha256:57fb3ffbc2b4d915b6a124117d478b54a257fcf47fa1f93a4f5641ebb75ccce7}"
+umask 077
+: "${IMAGE:?set the exact immutable Atlas runtime image manifest or local tag}"
+: "${WEIGHTS:?set the permitted Lightning NVFP4 checkpoint directory}"
+: "${DRAFT:?set the permitted official DSpark checkpoint directory}"
 NAME="${NAME:-atlas-lightning}"
 PORT="${PORT:-8888}"
-JINJA="${JINJA:-$PWD/jinja/nemotron_lightning.jinja}"
-
-if [[ ! -x "$SPARK" ]]; then
-  echo "spark binary not found or not executable: $SPARK" >&2
-  exit 2
-fi
+MODEL="${MODEL:-nvidia/nemotron-3.5-lightning-30b-a3b}"
+MAX_SEQ_LEN="${MAX_SEQ_LEN:-50016}"
+MAX_BATCH_SIZE="${MAX_BATCH_SIZE:-8}"
+MAX_PREFILL_TOKENS="${MAX_PREFILL_TOKENS:-8192}"
+GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.75}"
 
 docker rm -f "$NAME" >/dev/null 2>&1 || true
 docker run -d --name "$NAME" --network host --gpus all --ipc=host \
   --shm-size=64g --ulimit memlock=-1:-1 --cap-add=IPC_LOCK \
-  -e ATLAS_DISABLE_WATCHDOGS=1 \
   -e ATLAS_NO_MTP_DRAFTER_CONTEXT=1 \
   -e ATLAS_DFLASH_OPTION_B=1 \
   -e ATLAS_LIGHTNING_MAMBA_EXACT_BATCHED=1 \
@@ -26,17 +23,12 @@ docker run -d --name "$NAME" --network host --gpus all --ipc=host \
   -e ATLAS_LIGHTNING_MAMBA_BATCH_OUT=1 \
   -e ATLAS_LIGHTNING_MAMBA_EXACT_PERSISTENT=1 \
   -e ATLAS_MOE_EXPERT_GROUPED=1 \
-  -v "$SPARK:/usr/local/bin/spark:ro" \
   -v "$WEIGHTS:/model:ro" \
   -v "$DRAFT:/draft:ro" \
-  -v "$JINJA:/jinja-templates/nemotron_h.jinja:ro" \
-  "$IMAGE" \
-  serve --model-from-path /model \
-    --model-name nvidia/nemotron-3.5-lightning-30b-a3b \
-    --port "$PORT" --max-seq-len 50016 --kv-cache-dtype fp8 \
-    --kv-high-precision-layers max --gpu-memory-utilization 0.75 \
+  "$IMAGE" serve --model-from-path /model --model-name "$MODEL" --port "$PORT" \
+    --max-seq-len "$MAX_SEQ_LEN" --max-batch-size "$MAX_BATCH_SIZE" \
+    --max-prefill-tokens "$MAX_PREFILL_TOKENS" --dflash --draft-model /draft \
+    --dflash-gamma 4 --dflash-window-size 1024 --kv-cache-dtype fp8 \
+    --kv-high-precision-layers max --gpu-memory-utilization "$GPU_MEMORY_UTILIZATION" \
     --scheduling-policy slai --tool-call-parser qwen3_coder \
-    --default-chat-template-kwargs '{"enable_thinking":false}' \
-    --dflash --draft-model /draft --dflash-gamma 4 --dflash-window-size 1024
-
-echo "started $NAME on :$PORT (DSpark K=3)"
+    --default-chat-template-kwargs '{"enable_thinking":false}'
