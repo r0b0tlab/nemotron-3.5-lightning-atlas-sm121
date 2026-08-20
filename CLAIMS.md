@@ -17,7 +17,7 @@ made by this package.
 - Model manifest: `a14fad4058be6eb1bd2735148a9b94c4c2e069d1fcbf886a60de92deb3cd0a9b`
 - DSpark manifest: `edfd1601716ea449ce05ed6f4edb38fa4970f07bfc5b09b52e039b674cb0fa8d`
 - Profile hash: `1f96d12a86b2acdde41a5b0b6a713216d8d5d5fbd216c9521c0b5e1ce78a580f`
-- Harness revision: `aaf274a77846a7f712c191736c674496d452a439`
+- Harness revision: `4c93d5cc771a25f80c8fbd8667273322cf38b060`
 - Evidence directory: `5bd1fff-r0b0bench-corrected4` (partial diagnostic; BFCL incomplete)
 - Evidence manifest: `NOT_AVAILABLE_FULL_SUITE_INCOMPLETE`
 
